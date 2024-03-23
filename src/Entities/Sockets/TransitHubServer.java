@@ -1,4 +1,6 @@
-package Entities;
+package Entities.Sockets;
+
+import Entities.Globals;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -7,13 +9,11 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class TransitHubServer {
-    public static Globals.Arguments arguments;
+public class TransitHubServer implements Runnable {
     private static final ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
 
-    public static void main(String[] args) {
-        arguments = Globals.setArguments(args);
-
+    @Override
+    public void run() {
         ExecutorService executorService = Executors.newFixedThreadPool(Globals.THREAD_POOL_SIZE);
         try (ServerSocket serverSocket = new ServerSocket(Globals.SERVER_PORT)) {
 
@@ -46,8 +46,11 @@ public class TransitHubServer {
         Thread heartbeatThread = new Thread(() -> {
             try {
                 while (true) {
-                    Thread.sleep(5000);
-                    broadcastMessage(Globals.HEARTBEAT + "SERVER");
+                    Thread.sleep(10000);
+
+                    if (Globals.arguments.heartbeat()) {
+                        broadcastMessage(Globals.HEARTBEAT + "SERVER");
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -1,4 +1,6 @@
-package Entities;
+package Entities.Sockets;
+
+import Entities.Globals;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,16 +8,23 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class BusClient {
+public class BusClient implements Runnable {
+    private final int id;
 
-    public static void main(String[] args) {
+    public BusClient(int id) {
+        this.id = id;
+    }
+    @Override
+    public void run() {
         try (Socket socket = new Socket(Globals.SERVER_IP, Globals.SERVER_PORT);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
-            System.out.println("\nConnected to Transit Hub Server...\n");
+            Thread.sleep(2000);
 
-            out.println(Globals.CONNECTION + "Bus XX");
+            System.out.println("Bus " + id + " connected to Transit Hub Server...");
+
+            out.println(Globals.CONNECTION + "Bus " + id);
 
             startHeartbeatThread(out);
 
@@ -29,15 +38,20 @@ public class BusClient {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private static void startHeartbeatThread(PrintWriter out) {
+    private void startHeartbeatThread(PrintWriter out) {
         Thread heartbeatThread = new Thread(() -> {
             try {
                 while (true) {
-                    Thread.sleep(5000);
-                    out.println(Globals.HEARTBEAT + "BUS XX");
+                    Thread.sleep(10000);
+
+                    if (Globals.arguments.heartbeat()) {
+                        out.println(Globals.HEARTBEAT + "BUS " + id);
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

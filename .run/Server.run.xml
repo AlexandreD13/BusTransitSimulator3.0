@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Server" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="Entities.TransitHubServer" />
+    <option name="MAIN_CLASS_NAME" value="Entities.Sockets.TransitHubServer" />
     <module name="BusTransitSimulator3.0" />
     <option name="PROGRAM_PARAMETERS" value="-v" />
     <method v="2">

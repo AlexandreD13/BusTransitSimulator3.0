@@ -1,4 +1,6 @@
-package Entities;
+package Entities.Sockets;
+
+import Entities.Globals;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,7 +58,7 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleHeartBeat(String clientId, BufferedReader in) throws IOException {
-        if (TransitHubServer.arguments.verbose()) {
+        if (Globals.arguments.verbose()) {
             synchronized (System.out) {
                 System.out.println(clientId);
             }
@@ -64,11 +66,8 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleConnection(String clientId, BufferedReader in) throws IOException {
-        if (TransitHubServer.arguments.verbose()) {
-            synchronized (System.out) {
-                System.out.println(clientId);
-                System.out.println();
-            }
+        if (Globals.arguments.verbose()) {
+            System.out.println(clientId);
         }
     }
 

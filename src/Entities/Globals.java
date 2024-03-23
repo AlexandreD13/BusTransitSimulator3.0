@@ -1,19 +1,24 @@
 package Entities;
 
 public class Globals {
-    public record Arguments(boolean verbose) { }
+    public record Arguments(boolean verbose, boolean heartbeat) { }
 
-    public static Arguments setArguments(String[] args) {
+    public static Arguments arguments;
+
+    public static void setArguments(String[] args) {
         boolean verbose = false;
+        boolean heartbeat = false;
 
         for (String arg: args) {
             if (arg.equals("-v")) {
                 verbose = true;
-                break;  // remove if more arguments are added
+            }
+            if (arg.equals("-hb")) {
+                heartbeat = true;
             }
         }
 
-        return new Globals.Arguments(verbose);
+        arguments = new Globals.Arguments(verbose, heartbeat);
     }
 
     public static final int MAX_PASSENGERS_PER_BUS = 20;
