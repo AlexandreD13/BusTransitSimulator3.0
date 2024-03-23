@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BusClients" type="CompoundRunConfigurationType">
+    <toRun name="BusClient" type="Application" />
+    <toRun name="BusClient (1)" type="Application" />
+    <toRun name="BusClient (2)" type="Application" />
+    <toRun name="BusClient (3)" type="Application" />
+    <method v="2" />
+  </configuration>
+</component>
