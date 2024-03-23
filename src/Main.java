@@ -15,6 +15,8 @@ public class Main {
             startBuses(index + 1);
         }
 
+        var test = 0;
+
         // String fichierZipDestination = "desa2341_remise_projet2_IFT630_H2024.zip";
         // MakeZipFile.creerFichierZip(fichierZipDestination);
     }
@@ -27,7 +29,7 @@ public class Main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+        }, "TransitHub_Thread");
         hubThread.start();
     }
 
@@ -39,7 +41,7 @@ public class Main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+        }, "Bus" + id + "_Thread");
         busThread.start();
     }
 }
