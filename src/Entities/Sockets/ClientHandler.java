@@ -11,15 +11,17 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
     private final Socket clientSocket;
     private final PrintWriter out;
+    private final BufferedReader in;
 
     public ClientHandler(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
         this.out = new PrintWriter(clientSocket.getOutputStream(), true);
+        this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
     @Override
     public void run() {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+        try {
 
             while (true) {
                 String clientIdentifier = in.readLine();
@@ -34,8 +36,6 @@ public class ClientHandler implements Runnable {
                     handleStopMessage(clientIdentifier, in);
                 } else if (clientIdentifier.startsWith(Globals.HEARTBEAT)) {
                     handleHeartBeat(clientIdentifier, in);
-                } else if (clientIdentifier.startsWith(Globals.CONNECTION)) {
-                    handleConnection(clientIdentifier, in);
                 } else {
                     System.err.println("Unknown client identifier: " + clientIdentifier);
                 }
@@ -65,13 +65,19 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private void handleConnection(String clientId, BufferedReader in) throws IOException {
-        if (Globals.arguments.verbose()) {
-            System.out.println(clientId);
-        }
-    }
-
     public void sendMessage(String message) {
         out.println(message);
+    }
+
+    public void disconnect() throws IOException {
+        try {
+            if (in != null) in.close();
+            if (out != null) out.close();
+            if (clientSocket != null && !clientSocket.isClosed()) {
+                clientSocket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
